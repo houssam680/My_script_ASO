@@ -13,9 +13,9 @@ do
     read -p "inserta un numero" num
 
     if [[ random -gt $num ]]; then
-        echo "el numero es menor "
+        echo "el numero es mayor inserta un numero menor "
     elif [[ random -lt $num ]]; then
-        echo "el numero es mayor "
+        echo "el numero es menor inserta un nemero mayor "
     elif [[ random -eq $num ]]; then
         echo "Enhorabuena , te has ganado "
     fi
