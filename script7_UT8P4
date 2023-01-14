@@ -1,0 +1,11 @@
+
+#!/bin/bash
+
+	#  Realiza un script que limpie la carpeta temporal (/tmp o /temp.) a las 2:00 de cada
+    #domingo tenido de la carpeta /tmp a las 2:00 a.m de cada domingo
+
+	rm -r /tmp/*
+
+	# Y luego añadir la linea siguiente al crontab para hacer que se ejecute cuando debe:
+
+	# 0 2 * * 0 ~/script7_UT8P4.sh
