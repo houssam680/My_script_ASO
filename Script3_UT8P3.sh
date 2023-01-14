@@ -23,6 +23,10 @@ cortador_apellido2="${apellido2:0:2}" ; echo "${cortador_apellido2}" > /dev/null
 
 if [[ -n $@ ]] ; then
     if [ $# -eq 4 ]; then
+        echo "te has pasado el siguiente parametro al script"
+        echo " --> ./Script3_UT8P3.sh alta/baja nombre apellido1 apellido2"
+        echo "entonces el script va crear el user alu${cortador_apellido1}${cortador_apellido2}${cortador_nombre}"
+        echo "y lo va asignar al grupo alu${cortador_apellido1}${cortador_apellido2}${cortador_nombre}"
         if [ $1 == alta ]; then
             grep -q "^alu${cortador_apellido1}${cortador_apellido2}${cortador_nombre}" /etc/group ; let x=$?
             if [[ $x -eq 1 ]]
@@ -35,7 +39,7 @@ if [[ -n $@ ]] ; then
             grep -q "alu${cortador_apellido1}${cortador_apellido2}${cortador_nombre}" /etc/shadow ; let x=$?
             if [[ $x -eq 1 ]]
              then
-             useradd -m -c "$nombre $apellido1 $apellido2" -G "alu${cortador_apellido1}${cortador_apellido2}${cortador_nombre}" "alu${cortador_apellido1}${cortador_apellido2}${cortador_nombre}" > /dev/null
+             useradd -m -c "$nombre $apellido1 $apellido2" -g "alu${cortador_apellido1}${cortador_apellido2}${cortador_nombre}" "alu${cortador_apellido1}${cortador_apellido2}${cortador_nombre}" > /dev/null
              else
              echo "el usuario ya esxiste en el sistema "
             fi
@@ -48,6 +52,10 @@ if [[ -n $@ ]] ; then
     echo " --> ./Script3_UT8P3.sh alta/baja nombre apellido1 apellido2"
     fi
     if [ $# -eq 5 ]; then
+        echo "te has pasado el siguiente parametro al script"
+        echo " --> ./Script3_UT8P3.sh alta/baja nombre apellido1 apellido2 Grupo "
+        echo "entonces el script va crear el user alu${cortador_apellido1}${cortador_apellido2}${cortador_nombre}"
+        echo "y lo va asignar al grupo alu$5"
         if [ $1 == alta ]; then
             x=0
             grep -q "^$5" /etc/group ; let x=$?
@@ -70,12 +78,8 @@ if [[ -n $@ ]] ; then
 	        groupdel $5
         fi
     else
-        echo "te has pasado el siguiente parametro al script"
-        echo " --> ./Script3_UT8P3.sh alta/baja nombre apellido1 apellido2"
-        echo "entonces el script ha creado el user alu${cortador_apellido1}${cortador_apellido2}${cortador_nombre}"
-        echo "y lo ha asignado al grupo alu${cortador_apellido1}${cortador_apellido2}${cortador_nombre}"
         echo "Par crear el usuario y asignar lo a un grupo espicifico  al menos tienes que poner estos parametros "
-        echo "./Script3_UT8P3.sh alta/baja nombre apellido1 apellido2 grupo"
+        echo "./Script3_UT8P3.sh alta/baja nombre apellido1 apellido2 [grupo]"
     fi
 else
 echo "tienes que pasar al script parametros"
