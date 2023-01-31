@@ -16,9 +16,10 @@
 
 #Modificar el script anterior de manera que permita leer los datos personales de
 #varios usuarios pertenecientes a un grupo desde un fichero de texto.
-archivo=$1
+archivo=$2
+action=$1
 if [ $# -lt 2 ]; then
-  echo "La sintaxis correcta es ./Script3_UT8P3.sh action(alta o baja )  fichero_usuarios"
+  echo "La sintaxis correcta es ./Script3_UT8P3.sh (alta o baja )  fichero_usuarios"
   exit 1
 fi
 if [ "$action" == "alta" ]; then
