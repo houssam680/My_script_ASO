@@ -14,7 +14,7 @@
 #- En otro caso. Indicar “Error. La sintaxis correcta es
 #./Script3_UT8P3.sh alta/baja nombre apellido1 apellido2 [grupo]”
 if [ "$#" -lt 4 ]; then
-    echo "Error. La sintaxis correcta es: $0 alta/baja nombre apellido1 apellido2 [grupo]"
+    echo "Error. La sintaxis correcta es: ./Script3.sh alta/baja nombre apellido1 apellido2 [grupo]"
     exit 1
 fi
 nombre=${2:0:1}
