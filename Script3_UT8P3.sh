@@ -13,74 +13,30 @@
 #indica en el menú anterior, y proceder a dar de baja la cuenta.
 #- En otro caso. Indicar “Error. La sintaxis correcta es
 #./Script3_UT8P3.sh alta/baja nombre apellido1 apellido2 [grupo]”
-
-nombre=$2
-cortador_nombre="${nombre:0:1}" ; echo "${cortador_nombre}" > /dev/null
-apellido1=$3
-cortador_apellido1="${apellido1:0:2}" ; echo "${cortador_apellido1}" > /dev/null
-apellido2=$4
-cortador_apellido2="${apellido2:0:2}" ; echo "${cortador_apellido2}" > /dev/null
-
-if [[ -n $@ ]] ; then
-    if [ $# -eq 4 ]; then
-        echo "te has pasado el siguiente parametro al script"
-        echo " --> ./Script3_UT8P3.sh alta/baja nombre apellido1 apellido2"
-        echo "entonces el script va crear el user alu${cortador_apellido1}${cortador_apellido2}${cortador_nombre}"
-        echo "y lo va asignar al grupo alu${cortador_apellido1}${cortador_apellido2}${cortador_nombre}"
-        if [ $1 == alta ]; then
-            grep -q "^alu${cortador_apellido1}${cortador_apellido2}${cortador_nombre}" /etc/group ; let x=$?
-            if [[ $x -eq 1 ]]
-            then
-                `groupadd "alu${cortador_apellido1}${cortador_apellido2}${cortador_nombre}"`
-            else
-                echo "el grupo ya existe no hace falta crear lo "
-            fi 
-            x=0
-            grep -q "alu${cortador_apellido1}${cortador_apellido2}${cortador_nombre}" /etc/shadow ; let x=$?
-            if [[ $x -eq 1 ]]
-             then
-             useradd -m -c "$nombre $apellido1 $apellido2" -g "alu${cortador_apellido1}${cortador_apellido2}${cortador_nombre}" "alu${cortador_apellido1}${cortador_apellido2}${cortador_nombre}" > /dev/null
-             else
-             echo "el usuario ya esxiste en el sistema "
-            fi
-         elif [ $1 == baja ]; then
-            userdel "alu${cortador_apellido1}${cortador_apellido2}${cortador_nombre}"
-	        groupdel "alu${cortador_apellido1}${cortador_apellido2}${cortador_nombre}" 
-        fi
-    else
-    echo " Par crear el usuario sin espicificar el grupo tienes que poner estos parametros "
-    echo " --> ./Script3_UT8P3.sh alta/baja nombre apellido1 apellido2"
-    fi
-    if [ $# -eq 5 ]; then
-        echo "te has pasado el siguiente parametro al script"
-        echo " --> ./Script3_UT8P3.sh alta/baja nombre apellido1 apellido2 Grupo "
-        echo "entonces el script va crear el user alu${cortador_apellido1}${cortador_apellido2}${cortador_nombre}"
-        echo "y lo va asignar al grupo alu$5"
-        if [ $1 == alta ]; then
-            x=0
-            grep -q "^$5" /etc/group ; let x=$?
-            if [[ $x -eq 1 ]]
-             then
-             `groupadd "$5"`
-             else
-             echo "el grupo ya existe no hace falta crear lo "
-            fi 
-            x=0
-            grep -q "^$5" /etc/shadow ; let x=$?
-            if [[ $x -eq 1 ]]
-             then
-              useradd -m -c "$nombre $apellido1 $apellido2" -G $5 "alu${cortador_apellido1}${cortador_apellido2}${cortador_nombre}" > /dev/null
-             else
-             echo "el usuario esta en el sistema "
-            fi
-         elif [ $1 == baja ]; then
-            userdel "alu${cortador_apellido1}${cortador_apellido2}${cortador_nombre}"
-	        groupdel $5
-        fi
-    else
-        echo "Par crear el usuario y asignar lo a un grupo espicifico  al menos tienes que poner estos parametros "
-        echo "./Script3_UT8P3.sh alta/baja nombre apellido1 apellido2 [grupo]"
-    fi
+if [ "$#" -lt 4 ]; then
+    echo "Error. La sintaxis correcta es: $0 alta/baja nombre apellido1 apellido2 [grupo]"
+    exit 1
+fi
+nombre=${2:0:1}
+apellido1=${3:0:2}
+apellido2=${4:0:2}
+usuario="alu${apellido1}${apellido2}${nombre}"
+if [ -z "$5" ]; then
+  grupo="$usuario"
+  groupadd "$grupo"
 else
-echo "tienes que pasar al script parametros"
+  grupo="$5"
+fi
+if [ "$(id -u "$usuario" > /dev/null 2>&1; echo $?)" -eq 0 ]; then
+    echo "El usuario ya existe en el sistema."
+else
+    # Crear el usuario y asignarlo al grupo correspondiente
+    useradd -m -c "$2 $3 $4" -g "$grupo" "$usuario"
+    echo "El usuario se ha creado correctamente."
+fi
+
+# Dar de baja al usuario
+if [ "$1" = "baja" ]; then
+    userdel -r "$usuario"
+    echo "El usuario se ha eliminado correctamente."
 fi
